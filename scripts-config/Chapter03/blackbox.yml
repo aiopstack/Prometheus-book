@@ -1,0 +1,9 @@
+modules:
+  http_2xx:
+    prober: http
+    timeout: 8s
+    http:
+      valid_status_codes: []
+      method: GET
+preferred_ip_protocol: "ip4"
+      ip_protocol_fallback: false

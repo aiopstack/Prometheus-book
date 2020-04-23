@@ -1,0 +1,15 @@
+[Unit]
+Description=blackbox_exporter
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/data/blackbox_exporter/blackbox_exporter \
+          --config.file "/data/blackbox_exporter/blackbox.yml" \
+          --web.listen-address ":9115"
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

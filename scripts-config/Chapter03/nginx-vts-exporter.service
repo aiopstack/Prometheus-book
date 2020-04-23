@@ -1,0 +1,14 @@
+[Unit]
+Description=Prometheus Nginx VTS Exporter
+After=network.target
+User=nginx
+Group=nginx
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/data/nginx-vts-exporter/nginx-vts-exporter\
+-nginx.scrape_uri http://localhost/status/format/json
+
+[Install]
+WantedBy=multi-user.target

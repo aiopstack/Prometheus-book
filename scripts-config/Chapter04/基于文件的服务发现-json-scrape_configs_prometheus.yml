@@ -1,0 +1,6 @@
+scrape_configs:
+  - job_name: 'node_service_discovery'
+    file_sd_configs:
+      - files:
+        - targets/*.json
+        refresh_interval: 60m

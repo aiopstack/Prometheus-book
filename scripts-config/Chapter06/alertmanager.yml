@@ -1,0 +1,18 @@
+global:						 		# 全局配置模块
+  resolve_timeout: 5m		 		# 用于设置处理超时时间，默认是5分钟
+route:				     			# 路由配置模块
+  group_by: ['alertname']			# 告警分组
+  group_wait: 10s					# 10s内收到的同组告警在同一条告警通知中发送出去
+  group_interval: 10s				# 同组之间发送告警通知的时间间隔
+  repeat_interval: 1h				# 相同告警信息发送重复告警的周期
+  receiver: 'web.hook'				# 使用的接收器为web.hook
+receivers:					 		# 接收器配置模块
+- name: 'web.hook'					# 设置接收器名称为web.hook
+  webhook_configs:					# 设置webhook地址
+  - url: 'http://127.0.0.1:5001/'
+inhibit_rules:				 		# 告警抑制功能模块
+  - source_match:
+      severity: 'critical'			# 当存在源标签告警触发时抑制含有目标标签的告警
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'dev', 'instance']	# 保证该配置下标签内容相同才会被抑制

@@ -1,0 +1,11 @@
+{
+    "service": {
+        "id": "node_exporter", 
+        "name": "node_exporter", 
+        "tags": [
+            "dev_games"
+        ], 
+        "address": "127.0.0.1",
+        "port": 9100
+    }
+}

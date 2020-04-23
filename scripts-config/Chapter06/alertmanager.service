@@ -1,0 +1,19 @@
+[Unit]
+Description=Prometheus Alertmanager Service daemon
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/data/alertmanager/alertmanager \
+          --config.file "/data/alertmanager/alertmanager.yml" \
+          --storage.path="/data/alertmanager/data/" \
+          --data.retention=120h \
+          --web.external-url"http:// 192.168.186.7:9093" \
+
+          --web.listen-address=":9093"
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

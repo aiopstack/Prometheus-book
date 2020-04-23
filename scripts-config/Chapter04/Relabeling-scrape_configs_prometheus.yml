@@ -1,0 +1,10 @@
+scrape_configs:
+  - job_name: 'node'
+    static_configs:
+    - targets: ['192.168.186.7:9100','192.168.186.5:9100']
+    relabel_configs:
+    - action: replace
+     source_labels: ['__address__']
+     regex: (.*)
+     replacement: $1
+     target_label: MobileGames

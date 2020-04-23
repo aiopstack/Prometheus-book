@@ -1,0 +1,13 @@
+[Unit]
+Description=Prometheus Redis Exporter
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/data/redis_exporter/redis_exporter\
+-redis.addr localhost:6379\
+-redis.password YourStrongPassword \
+
+[Install]
+WantedBy=multi-user.target
