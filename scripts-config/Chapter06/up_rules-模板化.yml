@@ -1,0 +1,12 @@
+# vi /data/prometheus/rules/up_rules.yml
+groups:
+- name: UP
+  rules:
+  - alert: node
+    expr: up{job="node"} == 0
+    for: 3m
+    labels:
+      severity: critical 
+    annotations:
+      description: " {{ $labels.instance }} of job of {{ $labels.job }} has been down for more than 5 minutes."
+      summary: " {{ $labels.instance }} down,up=={{ $value }}"
