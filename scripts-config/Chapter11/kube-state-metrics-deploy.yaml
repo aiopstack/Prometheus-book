@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kube-state-metrics
+  namespace: monitoring
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: kube-state-metrics
+    spec:
+      serviceAccountName: kube-state-metrics
+      nodeSelector:
+        type: k8smaster
+      containers:
+      - name: kube-state-metrics
+        image: zqdlove/kube-state-metrics:v1.0.1
+        ports:
+        - containerPort: 8080

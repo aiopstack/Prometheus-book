@@ -1,0 +1,71 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: prometheus-node-exporter
+  namespace: monitoring
+  labels:
+    app: prometheus
+    component: node-exporter
+spec:
+  template:
+    metadata:
+      name: prometheus-node-exporter
+      labels:
+        app: prometheus
+        component: node-exporter
+    spec:
+      containers:
+      - image: zqdlove/node-exporter:v0.16.0
+        name: prometheus-node-exporter
+        ports:
+        - name: prom-node-exp
+          #^ must be an IANA_SVC_NAME (at most 15 characters, ..)
+          containerPort: 9100
+          # hostPort: 9100
+        resources:
+          requests:
+           # cpu: 20000m
+            cpu: "0.6"
+            memory: 100M
+          limits:
+            cpu: "0.6"
+            #cpu: 20000m
+            memory: 100M
+
+        command:
+        - /bin/node_exporter
+        - --path.procfs
+        - /host/proc
+        - --path.sysfs
+        - /host/sys
+        -  --collector.filesystem.ignored-mount-points
+        - ^/(sys|proc|dev|host|etc)($|/)
+        volumeMounts:
+        - name: proc
+          mountPath: /host/proc
+        - name: sys
+          mountPath: /host/sys
+        - name: root
+          mountPath: /rootfs
+      volumes:
+      - name: proc
+        hostPath:
+          path: /proc
+      - name: sys
+        hostPath:
+          path: /sys
+      - name: root
+        hostPath:
+          path: /
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: NotIn
+                  values:
+                  - $YOUR_IP
+
+      hostNetwork: true
+      hostPID: true

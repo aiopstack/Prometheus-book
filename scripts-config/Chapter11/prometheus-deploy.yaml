@@ -1,0 +1,62 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: prometheus-core
+  namespace: monitoring
+  labels:
+    app: prometheus
+    component: core
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: prometheus-main
+      labels:
+        app: prometheus
+        component: core
+    spec:
+      serviceAccountName: prometheus-k8s
+      # nodeSelector:
+      #   kubernetes.io/hostname: $YOUr_IP
+      containers:
+      - name: prometheus
+        image: zqdlove/prometheus:v2.0.0
+        args:
+          - '--storage.tsdb.retention=15d'
+          - '--config.file=/etc/prometheus/prometheus.yaml'
+          - '--storage.tsdb.path=/home/prometheus_data'
+          - '--web.enable-lifecycle' 
+        ports:
+        - name: webui
+          containerPort: 9090
+        resources:
+          requests:
+            cpu: 20000m
+            memory: 20000M
+          limits:
+            cpu: 20000m
+            memory: 20000M
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: data
+          mountPath: /home/prometheus_data
+        - name: config-volume
+          mountPath: /etc/prometheus
+        - name: rules-volume
+          mountPath: /etc/prometheus-rules
+        - name: time
+          mountPath: /etc/localtime
+      volumes:
+      - name: data
+        hostPath:
+          path: /home/cdnadmin/prometheus_data 
+      - name: config-volume
+        configMap:
+          name: prometheus-core
+      - name: rules-volume
+        configMap:
+          name: prometheus-rules
+      - name: time
+        hostPath:
+          path: /etc/localtime
