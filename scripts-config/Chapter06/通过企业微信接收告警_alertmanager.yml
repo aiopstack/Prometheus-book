@@ -1,0 +1,28 @@
+# cat alertmanager.yml
+global:
+  resolve_timeout: 5m
+  wechat_api_url: 'https://qyapi.weixin.qq.com/cgi-bin/'
+  wechat_api_corp_id: 'XXXXXXXXXXXX'
+  wechat_api_secret: 'U_HKt5xXXXXXXXXXXVTfynU'
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'wechat'
+receivers:
+  - name: 'wechat'
+    wechat_configs:
+      - send_resolved: true
+        to_party: '1'
+        agent_id: '1000002'
+        corp_id: 'XXXXXXXXXXXX'
+        to_user: 'LiuZhengWei'
+        api_url: 'https://qyapi.weixin.qq.com/cgi-bin/'
+        api_secret: 'U_HKt5xXXXXXXXXXXVTfynU'
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'dev', 'instance']

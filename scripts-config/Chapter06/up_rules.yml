@@ -1,0 +1,11 @@
+groups:
+- name: UP
+  rules:
+  - alert: node
+    expr: up{job="node"} == 0
+    for: 3m
+    labels:
+severity: critical
+    annotations:
+      description: "Node has been down for more than 5 minutes."
+      summary: "Node down"

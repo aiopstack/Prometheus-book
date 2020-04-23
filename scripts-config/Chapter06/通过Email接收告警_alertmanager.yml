@@ -1,0 +1,24 @@
+global:
+  resolve_timeout: 5m
+  smtp_smarthost: 'smtp.163.com:25'
+  smtp_from: 'emailname@163.com'
+  smtp_auth_username: 'emailname@163.com'
+  smtp_auth_password: ' YourStrongPassword '
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'email'
+receivers:
+  - name: 'email'
+   email_configs:
+   - to: 'emailname@sohu.com'
+    headers: { Subject: " WARNING-告警邮件" }
+    send_resolved: true
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'dev', 'instance']
